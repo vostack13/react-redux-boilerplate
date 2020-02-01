@@ -1,0 +1,43 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist/",
+    "sourceMap": true,
+    "noImplicitAny": true,
+    "module": "esnext",
+    "target": "es5",
+    "jsx": "react",
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+
+    "downlevelIteration": true,
+
+    "baseUrl": ".",
+
+    "paths": {
+      "app/*": ["./app/*"]
+    }
+  },
+
+  "include": [
+    "app",
+    "app/**/*.ts"
+  ],
+
+  "files": [
+    "./typings/typings.d.ts"
+  ]
+}

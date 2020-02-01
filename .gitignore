@@ -88,6 +88,13 @@ dist
 # https://nextjs.org/blog/next-9-1#public-directory-support
 # public
 
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
 # vuepress build output
 .vuepress/dist
 
@@ -102,3 +109,4 @@ dist
 
 # TernJS port file
 .tern-port
+/.idea/
