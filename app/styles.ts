@@ -15,13 +15,13 @@ const root = css`
 
     body {
         font-family: sans-serif;
-        min-width: 1280px;
+        min-width: 320px;
         display: block;
         padding-right: 0 !important;
         overflow: auto hidden;
     }
 
-    :global(#root) {
+    body > #root {
         height: 100%;
     }
 
