@@ -1,10 +1,19 @@
 import {css} from '@emotion/core';
-import {ITheme} from 'app/common/theme';
+import {ITheme} from 'app/view/shared/theme';
 
 const wrapper = (t: ITheme) => css`
     background-color: ${t.colors.gray050};
     width: 100%;
     height: 100%;
+`;
+
+const loadingPanel = css`
+    margin-left: auto;
+    margin-right: auto;
+    padding: 40px 16px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
 `;
 
 const list = css`
@@ -44,7 +53,7 @@ const itemDesc = (t: ITheme) => css`
 const itemActions = (t: ITheme) => css`
     display: flex;
 
-    & > *:nth-child(n+2) {
+    & > *:nth-of-type(n+2) {
         margin-left: 8px;
     }
 `;
@@ -57,4 +66,5 @@ export default {
     itemDesc,
     itemDate,
     itemActions,
+    loadingPanel,
 };

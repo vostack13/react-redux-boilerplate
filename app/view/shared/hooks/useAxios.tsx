@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import {config} from 'app/helpers/axios-config';
+import {config} from 'app/logic/shared/axios-config';
 import Cookies from 'js-cookie';
 
 interface UseAxiosProps {

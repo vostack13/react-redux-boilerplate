@@ -1,6 +1,6 @@
 import {css} from '@emotion/core';
-import {ITheme} from 'app/common/theme';
-import {TButtonColor, TButtonSize, TButtonVariant} from 'app/common/components/Button/index';
+import {ITheme} from 'app/view/shared/theme';
+import {TButtonColor, TButtonSize, TButtonVariant} from 'app/view/shared/components/Button/index';
 
 interface IRootProps {
     variant: TButtonVariant;
@@ -51,7 +51,7 @@ const size = {
             min-width: 16px;
         }
 
-        & > *:nth-child(n+2) {
+        & > *:nth-of-type(n+2) {
             margin-left: 8px;
         }
     `,

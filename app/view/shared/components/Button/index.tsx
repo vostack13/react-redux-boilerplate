@@ -11,8 +11,7 @@ interface IButtonProps {
     variant?: TButtonVariant;
     color?: TButtonColor;
     size?: TButtonSize;
-    // children: React.ReactElement | string;
-    children: any;
+    children: React.ReactNode;
 }
 
 const Button: React.FC<IButtonProps> = (props: IButtonProps) => {

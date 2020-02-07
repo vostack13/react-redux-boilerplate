@@ -17,7 +17,7 @@ module.exports = {
     },
 
     devtool: isProduction ? false : 'cheap-module-eval-source-map',
-    entry  : './index.tsx',
+    entry  : './view/index.tsx',
     mode   : isProduction ? 'production' : 'development',
 
     module: {
@@ -78,7 +78,7 @@ module.exports = {
         new HtmlWebpackPlugin(
             isProduction
                 ? {
-                    favicon: '../app/assets/images/favicon.png',
+                    favicon: './view/assets/images/favicon.png',
                     inject : true,
 
                     minify: {
@@ -94,19 +94,19 @@ module.exports = {
                         useShortDoctype              : true,
                     },
 
-                    template: '../public/index.html',
+                    template: './view/index.html',
                 }
 
                 : {
-                    favicon : '../app/assets/images/favicon.png',
-                    template: '../public/index.html',
+                    favicon : './view/assets/images/favicon.png',
+                    template: './view/index.html',
                 },
         ),
     ],
 
     resolve: {
         alias: {
-            'app': path.join(__dirname, '../app'),
+            'app': path.join(__dirname, '..', 'app'),
         },
 
         extensions: ['.tsx', '.ts', '.json', '.js'],
@@ -116,6 +116,4 @@ module.exports = {
             path.resolve(__dirname, '..', 'node_modules'),
         ],
     },
-
-
 };
