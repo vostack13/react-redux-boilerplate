@@ -72,7 +72,7 @@ module.exports = {
 
     plugins: [
         new CopyPlugin([
-            {from: 'assets', to: 'assets'},
+            {from: 'view/assets', to: 'assets'},
         ]),
 
         new HtmlWebpackPlugin(
