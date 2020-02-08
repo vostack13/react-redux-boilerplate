@@ -1,9 +1,9 @@
 import {getResources} from 'app/api';
 
-const getAllList = async () => {
-    return await getResources({url: '/tasks', method: 'get'});
-};
+const getAllList = () => getResources({url: '/tasks', method: 'get'});
+const addTaskItem = (data: any) => getResources({url: '/tasks/addItem', method: 'post', data});
 
 export const tasks = {
     getAllList,
+    addTaskItem,
 };

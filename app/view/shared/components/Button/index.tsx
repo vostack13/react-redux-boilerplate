@@ -7,7 +7,7 @@ export type TButtonVariant = 'fill' | 'outline';
 export type TButtonSize = 'm';
 export type TButtonColor = 'primary' | 'secondary';
 
-interface IButtonProps {
+interface IButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
     variant?: TButtonVariant;
     color?: TButtonColor;
     size?: TButtonSize;
@@ -15,14 +15,18 @@ interface IButtonProps {
 }
 
 const Button: React.FC<IButtonProps> = (props: IButtonProps) => {
+    const {children, variant, size, color, ...otherProps} = props;
+
     return <button
         css={styles.root({
-            variant: props.variant || 'outline',
-            size: props.size || 'm',
-            color: props.color || 'secondary',
+            variant: variant || 'outline',
+            size: size || 'm',
+            color: color || 'secondary',
         })}
+
+        {...otherProps}
     >
-        {props.children}
+        {children}
     </button>;
 };
 

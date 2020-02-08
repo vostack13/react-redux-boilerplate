@@ -4,8 +4,13 @@ import styles from './styles';
 import React from 'react';
 import {formatDate} from 'app/logic/shared/formate-data';
 import Button from 'app/view/shared/components/Button';
-import api from 'app/api';
 import Spinner from 'app/view/shared/components/Spinner';
+import {useDispatch, useSelector} from 'react-redux';
+import {reducerAddTaskItemRequest, reducerTaskListCanceled, reducerTaskListRequest} from 'app/redux/actions/tasks';
+import {_tasksListData, _tasksListError, _tasksListIsLoading} from 'app/redux/reducers/rootReducer';
+import Loader from 'app/view/App/Loader';
+import ErrorMessage from 'app/view/App/ErrorMessage';
+import TasksList from 'app/view/App/TasksList';
 
 interface IDataItem {
     [index: string]: {
@@ -16,60 +21,41 @@ interface IDataItem {
 }
 
 const App: React.FC = () => {
-    const [data, setData] = React.useState<IDataItem>({
-        '_001': {
-            title: 'Сделать React To Do',
-            description: 'Использовать redux, rxjs',
-            createdBy: formatDate(new Date(2020, 1, 1)),
-        },
-        '_002': {
-            title: 'Посмотреть лекцию 2 по Angular 8',
-            description: 'Написать что-нибудь на основе полученных знаний из лекции',
-            createdBy: formatDate(new Date(2020, 1, 2)),
-        },
-    });
+    const dispatch = useDispatch();
 
-    const [isLoading, setIsLoading] = React.useState(true);
-
-    React.useEffect(() => {
-        api.tasks.getAllList().then(() => setIsLoading(false));
+    const addTask = React.useCallback(() => {
+        dispatch(reducerAddTaskItemRequest({
+            title: 'Тестовая задача',
+            description: 'Тестируем задачу новую',
+        }));
     }, []);
 
+    React.useEffect(() => {
+        dispatch(reducerTaskListRequest());
+
+        return () => {
+            dispatch(reducerTaskListCanceled());
+        };
+    }, []);
+
+    console.log('APP render' );
+
     return <div css={styles.wrapper}>
-        {isLoading
-            ? <div css={styles.loadingPanel}>
-                <Spinner size={24}/>
-            </div>
+        <header css={styles.header}>
+            <h1 css={styles.headerCaption}>Список задач</h1>
 
-            : <ul css={styles.list}>
-                {Object.keys(data).map((id: string) => <li key={id} css={styles.item}>
-                    <div css={styles.itemTitle}>{data[id].title}</div>
-                    <div css={styles.itemDesc}>{data[id].description}</div>
-                    <div css={styles.itemDate}>{data[id].createdBy}</div>
+            <Button variant='fill' color='primary' onClick={addTask}>
+                <div>✚</div>
+                <div>Добавить задачу</div>
+            </Button>
+        </header>
 
-                    <div css={styles.itemActions}>
-                        <Button>
-                            <div>❤️</div>
-                        </Button>
+        <main css={styles.main}>
+            <Loader selector={_tasksListIsLoading} />
+            <ErrorMessage selector={_tasksListError} />
+            <TasksList />
+        </main>
 
-                        <Button variant='fill' color='primary'>
-                            <div>👻</div>
-                            <div>Изменить</div>
-                        </Button>
-
-                        <Button variant='fill'>
-                            <div>👻</div>
-                            <div>Изменить</div>
-                        </Button>
-
-                        <Button>
-                            <div>Удалить</div>
-                            <div>😛</div>
-                        </Button>
-                    </div>
-                </li>)}
-            </ul>
-        }
     </div>;
 };
 

@@ -1,19 +1,33 @@
-import {TASKS_LIST_REQUEST, TASKS_LIST_SUCCESS} from 'app/redux/actions';
+import {TASKS_LIST_CANCELED, TASKS_LIST_FAILURE, TASKS_LIST_REQUEST, TASKS_LIST_SUCCESS} from 'app/redux/actions';
 
-export type ITasksDataState = any;
 export type ITasksIsLoadingState = boolean;
-export type ITasksErrorState = string;
+
+export type ITasksDataState = {
+    isLoaded: boolean;
+    data: Array<any>
+};
+
+export type ITasksErrorState = {
+    message: string;
+};
 
 export interface ITasksState {
     isLoading: ITasksIsLoadingState;
-    data: ITasksDataState;
+    taskList: ITasksDataState;
     error: ITasksErrorState;
 }
 
 const initialState = {
-    isLoading: true,
-    data: {},
-    error: '',
+    isLoading: false,
+
+    taskList: {
+        isLoaded: false,
+        data: [],
+    },
+
+    error: {
+        message: '',
+    },
 };
 
 export default (state: ITasksState = initialState, action: {payload?: any, type: string}): ITasksState => {
@@ -26,8 +40,26 @@ export default (state: ITasksState = initialState, action: {payload?: any, type:
         case TASKS_LIST_SUCCESS: return {
             ...state,
             isLoading: false,
-            data: action.payload,
-            error: '',
+
+            taskList: {
+                isLoaded: true,
+                data: action.payload,
+            },
+            error: initialState.error,
+        };
+
+        case TASKS_LIST_FAILURE: return {
+            ...state,
+            isLoading: false,
+
+            error: {
+                message: action.payload,
+            },
+        };
+
+        case TASKS_LIST_CANCELED: return {
+            ...state,
+            isLoading: false,
         };
 
         default: return state;
