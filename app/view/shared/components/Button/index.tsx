@@ -7,7 +7,7 @@ export type TButtonVariant = 'fill' | 'outline';
 export type TButtonSize = 'm';
 export type TButtonColor = 'primary' | 'secondary';
 
-interface IButtonProps extends React.HTMLAttributes<HTMLButtonElement> {
+interface IButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     variant?: TButtonVariant;
     color?: TButtonColor;
     size?: TButtonSize;
