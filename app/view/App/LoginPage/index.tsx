@@ -3,31 +3,60 @@ import {jsx} from '@emotion/core';
 import styles from './styles';
 import React from 'react';
 import Button from 'app/view/shared/components/Button';
+import {useDispatch, useSelector} from 'react-redux';
+import {reducerSignInRequest} from 'app/redux/actions/auth';
+import {_authData, _authIsAuthorized} from 'app/redux/reducers/rootReducer';
+import {Redirect} from 'react-router-dom';
 
 const LoginPage: React.FC = () => {
+    const dispatch = useDispatch();
+    const authIsAuthorized = useSelector(_authIsAuthorized);
+
+    const [formData, setFormData] = React.useState({
+        login: 'stanislav',
+        password: '123',
+    });
+
+    const changeFormData = React.useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+        setFormData( {...formData, [event.target.name]: event.target.value});
+    }, [formData]);
 
     const submitForm = React.useCallback((event: React.FormEvent) => {
+        dispatch(reducerSignInRequest(formData));
         event.preventDefault();
-    }, []);
+    }, [formData]);
 
-    return <main >
-        <section>
-            <h1>Добро пожаловать!</h1>
-            <h2>Войдите в приложение</h2>
+    return authIsAuthorized
+        ? <Redirect to='/tasks' />
 
-            <form css={styles.form} onSubmit={submitForm}>
-                <label>
-                    <input placeholder={'Введите логин'}/>
-                </label>
+        : <main css={styles.main}>
+            <section css={styles.section}>
+                <h1 css={styles.sectionTitle}>Добро пожаловать!</h1>
 
-                <label>
-                    <input placeholder={'Введи пароль'}/>
-                </label>
+                <form css={styles.sectionForm} onSubmit={submitForm}>
+                    <label>
+                        <input
+                            name='login'
+                            placeholder={'Введите логин'}
+                            value={formData.login}
+                            onChange={changeFormData}
+                        />
+                    </label>
 
-                <Button type='submit' color='primary' variant='fill'>Войти</Button>
-            </form>
-        </section>
-    </main>;
+                    <label>
+                        <input
+                            type='password'
+                            name='password'
+                            placeholder={'Введи пароль'}
+                            value={formData.password}
+                            onChange={changeFormData}
+                        />
+                    </label>
+
+                    <Button type='submit' color='primary' variant='fill'>Войти</Button>
+                </form>
+            </section>
+        </main>;
 };
 
 export default LoginPage;

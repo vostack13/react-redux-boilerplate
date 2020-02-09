@@ -1,14 +1,11 @@
 import {ofType} from 'redux-observable';
-import {
-    TASKS_ADD_ITEM_CANCELED,
-    TASKS_ADD_ITEM_REQUEST,
-    TASKS_LIST_CANCELED,
-    TASKS_LIST_REQUEST
-} from 'app/redux/actions';
-import {from, of, race} from 'rxjs';
-import {catchError, map, mergeMap, take, tap} from 'rxjs/operators';
+import {TASKS_ADD_ITEM_CANCELED, TASKS_ADD_ITEM_REQUEST, TASKS_LIST_CANCELED, TASKS_LIST_REQUEST} from 'app/redux/actions';
+import {concat, from, of, race} from 'rxjs';
+import {catchError, map, mergeMap, take} from 'rxjs/operators';
 import api from 'app/api';
 import {reducerTaskListFailure, reducerTaskListSuccess} from 'app/redux/actions/tasks';
+import {TYPE_AUTH_ERROR} from 'app/api/errors';
+import {reducerAuthTokenFailure} from 'app/redux/actions/auth';
 
 export const epicTasksList = (action$: any) => action$.pipe(
     ofType(TASKS_LIST_REQUEST),
@@ -20,8 +17,15 @@ export const epicTasksList = (action$: any) => action$.pipe(
                 return reducerTaskListSuccess(r.data);
             }),
 
-            catchError(error => {
+            catchError((error: any) => {
                 console.log('ERROR', error);
+
+                if (error.typeError === TYPE_AUTH_ERROR)
+                    return concat(
+                        of(reducerTaskListFailure(error)),
+                        of(reducerAuthTokenFailure())
+                    );
+
                 return of(reducerTaskListFailure(error));
             })
         ),
@@ -51,6 +55,12 @@ export const epicAddTaskItem = (action$: any) => action$.pipe(
 
             catchError(error => {
                 console.log('ERROR', error);
+                if (error.typeError === TYPE_AUTH_ERROR)
+                    return concat(
+                        of(reducerTaskListFailure(error)),
+                        of(reducerAuthTokenFailure())
+                    );
+
                 return of(reducerTaskListFailure(error));
             })
         ),

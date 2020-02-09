@@ -1,9 +1,4 @@
-import {getResources} from 'app/api';
+import {getResources} from 'app/api/config';
 
-const getAllList = () => getResources({url: '/tasks', method: 'get'});
-const addTaskItem = (data: any) => getResources({url: '/tasks/addItem', method: 'post', data});
-
-export const tasks = {
-    getAllList,
-    addTaskItem,
-};
+export const getAllList = () => getResources({url: '/tasks', method: 'get'});
+export const addTaskItem = (data: any) => getResources({url: '/task', method: 'post', data});

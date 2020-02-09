@@ -1,11 +1,12 @@
 import {css} from '@emotion/core';
 import {ITheme} from 'app/view/shared/theme';
-import {TButtonColor, TButtonSize, TButtonVariant} from 'app/view/shared/components/Button/index';
+import {TButtonAlignContent, TButtonColor, TButtonSize, TButtonVariant} from 'app/view/shared/components/Button/index';
 
 interface IRootProps {
     variant: TButtonVariant;
     size: TButtonSize;
     color: TButtonColor;
+    alignContent: TButtonAlignContent;
 }
 
 const root = (props: IRootProps) => (t: ITheme) => css`
@@ -13,7 +14,22 @@ const root = (props: IRootProps) => (t: ITheme) => css`
     ${variant[props.variant](t)};
     ${color[props.color](t)};
     ${size[props.size](t)};
+    ${alignContent[props.alignContent]}
 `;
+
+const alignContent = {
+    start: css`
+        justify-content: flex-start;
+    `,
+
+    center: css`
+        justify-content: center;
+    `,
+
+    end: css`
+        justify-content: flex-end;
+    `,
+};
 
 const variant = {
     fill: (t: ITheme) => css`
