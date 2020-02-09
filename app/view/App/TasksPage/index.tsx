@@ -31,6 +31,7 @@ const TasksPage: React.FC<ITasksPageProps> = (props: ITasksPageProps) => {
     }, []);
 
     return <Fragment>
+    {/*// <div css={styles.wrapper}>*/}
         <header css={styles.header}>
             <h1 css={styles.headerCaption}>Список задач</h1>
 
@@ -46,6 +47,7 @@ const TasksPage: React.FC<ITasksPageProps> = (props: ITasksPageProps) => {
             <TasksList />
         </main>
     </Fragment>;
+    // </div>;
 };
 
 export default TasksPage;

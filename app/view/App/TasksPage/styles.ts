@@ -1,6 +1,13 @@
 import {css} from '@emotion/core';
 import {ITheme} from 'app/view/shared/theme';
 
+const wrapper = (t: ITheme) => css`
+    position: relative;
+    background-color: ${t.colors.gray050};
+    min-height: 100vh;
+    padding-top: 64px;
+`;
+
 const header = (t: ITheme) => css`
     position: fixed;
     left: 0;
@@ -16,6 +23,7 @@ const header = (t: ITheme) => css`
 `;
 
 const main = css`
+    margin-top: 64px;
     padding-top: 32px;
     padding-bottom: 32px;
 `;
@@ -26,6 +34,7 @@ const headerCaption = (t: ITheme) => css`
 `;
 
 export default {
+    wrapper,
     header,
     headerCaption,
     main,
