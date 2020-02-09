@@ -1,4 +1,11 @@
-import {AUTH_SIGNIN_CANCELED, AUTH_SIGNIN_FAILURE, AUTH_SIGNIN_REQUEST, AUTH_SIGNIN_SUCCESS, AUTH_TOKEN_FAILURE} from 'app/redux/actions';
+import {
+    AUTH_SIGNIN_CANCELED,
+    AUTH_SIGNIN_FAILURE,
+    AUTH_SIGNIN_REQUEST,
+    AUTH_SIGNIN_SUCCESS, AUTH_TOKEN_CANCELED,
+    AUTH_TOKEN_FAILURE,
+    AUTH_TOKEN_REQUEST, AUTH_TOKEN_SUCCESS
+} from 'app/redux/actions';
 
 export type IAuthIsLoadingState = boolean;
 export type IAuthIsAuthorizedState = boolean;
@@ -8,20 +15,30 @@ export type IAuthDataState = {
     data: any
 };
 
+export type IAuthTokenState = {
+    isLoading: IAuthIsLoadingState;
+    isAuthorized: IAuthIsAuthorizedState;
+};
+
 export type IAuthErrorState = {
     message: string;
 };
 
 export interface IAuthState {
     isLoading: IAuthIsLoadingState;
-    isAuthorized: IAuthIsAuthorizedState;
     signin: IAuthDataState;
     error: IAuthErrorState;
+    authToken: IAuthTokenState;
 }
 
 const initialState = {
     isLoading: false,
-    isAuthorized: false,
+
+    authToken: {
+        isLoading: false,
+        isAuthorized: false,
+
+    },
 
     signin: {
         isLoaded: false,
@@ -43,7 +60,11 @@ export default (state: IAuthState = initialState, action: {payload?: any, type: 
         case AUTH_SIGNIN_SUCCESS: return {
             ...state,
             isLoading: false,
-            isAuthorized: true,
+
+            authToken: {
+                isLoading: false,
+                isAuthorized: true,
+            },
 
             signin: {
                 isLoaded: true,
@@ -55,7 +76,11 @@ export default (state: IAuthState = initialState, action: {payload?: any, type: 
         case AUTH_SIGNIN_FAILURE: return {
             ...state,
             isLoading: false,
-            isAuthorized: false,
+
+            authToken: {
+                isLoading: false,
+                isAuthorized: false,
+            },
 
             error: {
                 message: action.payload,
@@ -67,9 +92,39 @@ export default (state: IAuthState = initialState, action: {payload?: any, type: 
             isLoading: false,
         };
 
+        case AUTH_TOKEN_REQUEST: return {
+            ...state,
+
+            authToken: {
+                ...state.authToken,
+                isLoading: true,
+            },
+        };
+
+        case AUTH_TOKEN_SUCCESS: return {
+            ...state,
+
+            authToken: {
+                isLoading: false,
+                isAuthorized: true,
+            },
+        };
+
         case AUTH_TOKEN_FAILURE: return {
             ...state,
-            isAuthorized: false,
+            authToken: {
+                isLoading: false,
+                isAuthorized: false,
+            },
+        };
+
+        case AUTH_TOKEN_CANCELED: return {
+            ...state,
+
+            authToken: {
+                ...state.authToken,
+                isLoading: false,
+            },
         };
 
         default: return state;
