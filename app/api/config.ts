@@ -71,14 +71,37 @@ export const getResources = (props: AxiosRequestConfig) => new Promise((resolve,
 });
 
 export const sendLogin = (props: AxiosRequestConfig) => new Promise((resolve, reject) => {
-    axiosInstanceGlobal(props)
+    axios({...config, ...props})
         .then((res) => {
             const {accessToken, refreshToken, ...otherData} = res.data;
+
             console.log('LOGINED ACCESS TOKEN', accessToken);
             console.log('LOGINED REFRESH TOKEN', refreshToken);
+
             applicationAccessToken.setToken(accessToken);
+            Cookies.set('refreshToken', refreshToken);
 
             return resolve({data: otherData});
+        })
+
+        .catch(err => reject(genarateError(err)));
+});
+
+export const refreshToken = () => new Promise((resolve, reject) => {
+    const refreshToken = Cookies.get('refreshToken');
+
+    if (!refreshToken) {
+        return reject(genarateError({response : {status: 403}}));
+    }
+
+    axios({...config, url: 'refresh', method: 'post', data: {refreshToken}})
+        .then((res) => {
+            const {accessToken, refreshToken} = res.data;
+
+            applicationAccessToken.setToken(accessToken);
+            Cookies.set('refreshToken', refreshToken);
+
+            resolve();
         })
 
         .catch(err => reject(genarateError(err)));

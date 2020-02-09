@@ -28,15 +28,16 @@ const App: React.FC = () => {
     }, []);
 
     return <Switch>
+        <Route exact path='/signin'>
+            <LoginPage />
+        </Route>
+
         <RequireAuth >
             <Route path={'/tasks'}>
                 <TasksPage />
             </Route>
         </RequireAuth>
 
-        <Route exact path='/signin'>
-            <LoginPage />
-        </Route>
 
         <Redirect to='/tasks' />
     </Switch>;

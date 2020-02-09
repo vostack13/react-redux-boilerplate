@@ -5,12 +5,12 @@ import React from 'react';
 import Button from 'app/view/shared/components/Button';
 import {useDispatch, useSelector} from 'react-redux';
 import {reducerSignInRequest} from 'app/redux/actions/auth';
-import {_authData, _authIsAuthorized} from 'app/redux/reducers/rootReducer';
+import {_authAuthToken} from 'app/redux/reducers/rootReducer';
 import {Redirect} from 'react-router-dom';
 
 const LoginPage: React.FC = () => {
     const dispatch = useDispatch();
-    const authIsAuthorized = useSelector(_authIsAuthorized);
+    const authAuthToken = useSelector(_authAuthToken);
 
     const [formData, setFormData] = React.useState({
         login: 'stanislav',
@@ -25,8 +25,9 @@ const LoginPage: React.FC = () => {
         dispatch(reducerSignInRequest(formData));
         event.preventDefault();
     }, [formData]);
+    console.log('dfdfs' );
 
-    return authIsAuthorized
+    return authAuthToken.isAuthorized
         ? <Redirect to='/tasks' />
 
         : <main css={styles.main}>
