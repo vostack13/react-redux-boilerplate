@@ -5,7 +5,7 @@ import Cookies from 'js-cookie';
 export const config = {
     // baseURL: 'https://t3s3o.sse.codesandbox.io',
     // baseURL: 'http://localhost:8032',
-    baseURL: 'http://192.168.0.101:8032',
+    baseURL: 'http://192.168.0.106:8032',
 
     headers: {
         'Content-Type': 'application/json; charset=utf-8',
