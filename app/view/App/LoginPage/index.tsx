@@ -7,6 +7,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {reducerSignInRequest} from 'app/redux/actions/auth';
 import {_authAuthToken} from 'app/redux/reducers/rootReducer';
 import {Redirect} from 'react-router-dom';
+import Spinner from 'app/view/shared/components/Spinner';
 
 const LoginPage: React.FC = () => {
     const dispatch = useDispatch();
@@ -22,15 +23,18 @@ const LoginPage: React.FC = () => {
     }, [formData]);
 
     const submitForm = React.useCallback((event: React.FormEvent) => {
-        dispatch(reducerSignInRequest(formData));
         event.preventDefault();
+        dispatch(reducerSignInRequest(formData));
     }, [formData]);
 
-    return authAuthToken.isAuthorized
-        ? <Redirect to='/tasks' />
+    if (authAuthToken.isAuthorized)
+        return <Redirect to='/tasks' />;
 
-        : <main css={styles.main}>
-            <section css={styles.section}>
+    return <main css={styles.main}>
+        {!authAuthToken.isLoaded
+            ? <Spinner/>
+
+            : <section css={styles.section}>
                 <h1 css={styles.sectionTitle}>Добро пожаловать!</h1>
 
                 <form css={styles.sectionForm} onSubmit={submitForm}>
@@ -55,8 +59,8 @@ const LoginPage: React.FC = () => {
 
                     <Button type='submit' color='primary' variant='fill'>Войти</Button>
                 </form>
-            </section>
-        </main>;
+            </section>}
+        </main >;
 };
 
 export default LoginPage;

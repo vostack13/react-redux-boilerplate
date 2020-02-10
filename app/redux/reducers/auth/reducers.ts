@@ -17,6 +17,7 @@ export type IAuthDataState = {
 
 export type IAuthTokenState = {
     isLoading: IAuthIsLoadingState;
+    isLoaded: IAuthIsLoadingState;
     isAuthorized: IAuthIsAuthorizedState;
 };
 
@@ -35,6 +36,7 @@ const initialState = {
     isLoading: false,
 
     authToken: {
+        isLoaded: false,
         isLoading: false,
         isAuthorized: false,
 
@@ -62,6 +64,7 @@ export default (state: IAuthState = initialState, action: {payload?: any, type: 
             isLoading: false,
 
             authToken: {
+                isLoaded: true,
                 isLoading: false,
                 isAuthorized: true,
             },
@@ -78,6 +81,7 @@ export default (state: IAuthState = initialState, action: {payload?: any, type: 
             isLoading: false,
 
             authToken: {
+                isLoaded: true,
                 isLoading: false,
                 isAuthorized: false,
             },
@@ -97,6 +101,7 @@ export default (state: IAuthState = initialState, action: {payload?: any, type: 
 
             authToken: {
                 ...state.authToken,
+                isLoaded: false,
                 isLoading: true,
             },
         };
@@ -105,6 +110,7 @@ export default (state: IAuthState = initialState, action: {payload?: any, type: 
             ...state,
 
             authToken: {
+                isLoaded: true,
                 isLoading: false,
                 isAuthorized: true,
             },
@@ -113,6 +119,7 @@ export default (state: IAuthState = initialState, action: {payload?: any, type: 
         case AUTH_TOKEN_FAILURE: return {
             ...state,
             authToken: {
+                isLoaded: true,
                 isLoading: false,
                 isAuthorized: false,
             },
@@ -124,6 +131,7 @@ export default (state: IAuthState = initialState, action: {payload?: any, type: 
             authToken: {
                 ...state.authToken,
                 isLoading: false,
+                isLoaded: false,
             },
         };
 

@@ -16,13 +16,10 @@ export const epicAuthToken = (action$: any) => action$.pipe(
     mergeMap(() => race(
         from(api.refreshToken()).pipe(
             map((r: any) => {
-                console.log('RESULT', r);
-
                 return reducerAuthTokenSuccess();
             }),
 
             catchError(error => {
-                console.log('ERROR', error);
                 return of(reducerAuthTokenFailure());
             })
         ),
@@ -45,13 +42,10 @@ export const epicSignIn = (action$: any) => action$.pipe(
     mergeMap((action: any) => race(
         from(api.auth.signin(action.payload)).pipe(
             map((r: any) => {
-                console.log('RESULT', r);
-
                 return reducerSignInSuccess(r.data);
             }),
 
             catchError(error => {
-                console.log('ERROR', error);
                 return of(reducerSignInFailure(error));
             })
         ),

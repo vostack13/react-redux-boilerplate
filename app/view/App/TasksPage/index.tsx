@@ -20,6 +20,8 @@ const TasksPage: React.FC<ITasksPageProps> = (props: ITasksPageProps) => {
             title: 'Тестовая задача',
             description: 'Тестируем задачу новую',
         }));
+
+        dispatch(reducerTaskListRequest());
     }, []);
 
     React.useEffect(() => {

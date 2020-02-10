@@ -13,13 +13,10 @@ export const epicTasksList = (action$: any) => action$.pipe(
     mergeMap((action: any) => race(
         from(api.tasks.getAllList()).pipe(
             map((r: any) => {
-                console.log('RESULT', r);
                 return reducerTaskListSuccess(r.data);
             }),
 
             catchError((error: any) => {
-                console.log('ERROR', error);
-
                 if (error.typeError === TYPE_AUTH_ERROR)
                     return concat(
                         of(reducerTaskListFailure(error)),
@@ -48,13 +45,10 @@ export const epicAddTaskItem = (action$: any) => action$.pipe(
     mergeMap((action: any) => race(
         from(api.tasks.addTaskItem(action.payload)).pipe(
             map((r: any) => {
-                console.log('RESULT', r);
-
                 return reducerTaskListSuccess(r.data);
             }),
 
             catchError(error => {
-                console.log('ERROR', error);
                 if (error.typeError === TYPE_AUTH_ERROR)
                     return concat(
                         of(reducerTaskListFailure(error)),

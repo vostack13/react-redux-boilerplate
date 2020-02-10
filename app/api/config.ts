@@ -1,5 +1,5 @@
 import axios, {AxiosRequestConfig} from 'axios';
-import {genarateError} from 'app/api/errors';
+import {generateError} from 'app/api/errors';
 import Cookies from 'js-cookie';
 
 export const config = {
@@ -16,32 +16,53 @@ export const axiosInstanceGlobal = axios.create(config);
 
 const applicationAccessToken = {
     token: '',
+    tokenExp: 0,
+    isFetching: false,
 
-    getToken() {
-        return this.token;
+    setToken(token: string, tokenExp: number) {
+        this.token = token;
+        this.tokenExp = tokenExp;
     },
 
-    setToken(token: string) {
-        this.token = token;
+    tokenResolved() {
+        return new Promise((resolve, reject) => {
+            if (!this.isFetching) {
+                const timer = setInterval(() => {
+                    if (!this.isFetching) {
+                        clearInterval(timer);
+                        resolve();
+                    }
+                }, 200);
+            } else {
+                resolve();
+            }
+
+        });
     },
 };
 
 axiosInstanceGlobal.interceptors.request.use(
-    (config: AxiosRequestConfig) => {
-        console.log('ПРОВЕРКА ПЕРЕД ЗАПРОСОМ');
-        console.log('ACCESS TOKEN', applicationAccessToken.token);
+    async (config: AxiosRequestConfig) => {
+        await applicationAccessToken.tokenResolved();
 
-        if (!applicationAccessToken.token) {
-            console.log('ACCESS TOKEN — ОТСУТСТВУЕТ');
+        if (!applicationAccessToken.token || !applicationAccessToken.tokenExp) {
+            const refreshData = await refreshToken()
+                .then((r: any) => r)
+                .catch((e: any) => e);
 
-            const refreshToken = Cookies.get('refreshToken');
+            if (refreshData.typeError !== undefined)
+                return Promise.reject({response : {status: 401}});
+        }
 
-            console.log('ПРОБУЕМ REFRESH TOKEN', refreshToken);
+        const currentTime = Math.floor(Date.now() / 1000);
 
-            if (!refreshToken) {
-                console.log('REFRESH TOKEN — ОТСУТСТВУЕТ');
+        if (currentTime >= applicationAccessToken.tokenExp - 30) {
+            const refreshData = await refreshToken()
+                .then((r: any) => r)
+                .catch((e: any) => e);
 
-                return Promise.reject({response : {status: 403}});
+            if (refreshData.typeError !== undefined) {
+                return Promise.reject({response : {status: 401}});
             }
         }
 
@@ -54,64 +75,60 @@ axiosInstanceGlobal.interceptors.request.use(
         };
     },
 
-    error => {
-
-        return Promise.reject(error);
-    }
+    error => Promise.reject(error)
 );
 
 axiosInstanceGlobal.interceptors.response.use(
-    (response: any) => {
-        console.log('INTERCEPTORS SUCCESS', response);
-
-        return response;
-    },
-    error => {
-        console.log('INTERCEPTORS ERROR', error);
-
-        return Promise.reject(error);
-    }
+    (response: any) => response,
+    error => Promise.reject(error)
 );
 
 export const getResources = (props: AxiosRequestConfig) => new Promise((resolve, reject) => {
     axiosInstanceGlobal(props)
         .then((res) => resolve({data: res.data}))
-        .catch(err => reject(genarateError(err)));
+        .catch(err => reject(generateError(err)));
 });
 
 export const sendLogin = (props: AxiosRequestConfig) => new Promise((resolve, reject) => {
     axios({...config, ...props})
         .then((res) => {
-            const {accessToken, refreshToken, ...otherData} = res.data;
+            const {accessToken, accessToken_exp, refreshToken, refreshToken_exp, ...otherData} = res.data;
 
-            console.log('LOGINED ACCESS TOKEN', accessToken);
-            console.log('LOGINED REFRESH TOKEN', refreshToken);
-
-            applicationAccessToken.setToken(accessToken);
+            applicationAccessToken.setToken(accessToken, accessToken_exp);
             Cookies.set('refreshToken', refreshToken);
+            Cookies.set('refreshToken_exp', refreshToken_exp);
 
             return resolve({data: otherData});
         })
 
-        .catch(err => reject(genarateError(err)));
+        .catch(err => reject(generateError(err)));
 });
 
-export const refreshToken = () => new Promise((resolve, reject) => {
+export const refreshToken = (): any => new Promise((resolve, reject) => {
     const refreshToken = Cookies.get('refreshToken');
+    const refreshTokenExp = Cookies.get('refreshToken_exp');
 
-    if (!refreshToken) {
-        return reject(genarateError({response : {status: 403}}));
+    if (!refreshToken || !refreshTokenExp) {
+        return reject(generateError({response : {status: 403}}));
     }
+
+    applicationAccessToken.isFetching = true;
 
     axios({...config, url: 'refresh', method: 'post', data: {refreshToken}})
         .then((res) => {
-            const {accessToken, refreshToken} = res.data;
+            const {accessToken, accessToken_exp, refreshToken, refreshToken_exp} = res.data;
 
-            applicationAccessToken.setToken(accessToken);
+            applicationAccessToken.setToken(accessToken, accessToken_exp);
             Cookies.set('refreshToken', refreshToken);
-
-            resolve();
+            Cookies.set('refreshToken_exp', refreshToken_exp);
+            applicationAccessToken.isFetching = false;
+            return resolve({});
         })
 
-        .catch(err => reject(genarateError(err)));
+        .catch(err => {
+            Cookies.remove('refreshToken');
+            Cookies.remove('refreshToken_exp');
+            applicationAccessToken.isFetching = false;
+            return reject(generateError(err));
+        });
 });

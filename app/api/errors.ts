@@ -3,7 +3,7 @@ export const TYPE_NOT_FOUND_ERROR = 'TYPE_NOT_FOUND_ERROR';
 export const TYPE_AUTH_ERROR = 'TYPE_AUTH_ERROR';
 export const TYPE_SERVER_ERROR = 'TYPE_SERVER_ERROR';
 
-export const genarateError = (errorResponse: any) => {
+export const generateError = (errorResponse: any) => {
     if (errorResponse.response === undefined) {
         return {
             error: errorResponse,
