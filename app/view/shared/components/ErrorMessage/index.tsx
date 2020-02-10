@@ -11,7 +11,6 @@ interface IErrorMessageProps {
 
 const ErrorMessage: React.FC<IErrorMessageProps> = (props: IErrorMessageProps) => {
     const error = useSelector<IAppState, any>(props.selector);
-    console.log('Error render' );
 
     return error.message
         ? <div css={styles.errorMessage}>

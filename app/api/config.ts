@@ -3,7 +3,9 @@ import {genarateError} from 'app/api/errors';
 import Cookies from 'js-cookie';
 
 export const config = {
-    baseURL: 'https://t3s3o.sse.codesandbox.io',
+    // baseURL: 'https://t3s3o.sse.codesandbox.io',
+    // baseURL: 'http://localhost:8032',
+    baseURL: 'http://192.168.0.101:8032',
 
     headers: {
         'Content-Type': 'application/json; charset=utf-8',
@@ -26,12 +28,19 @@ const applicationAccessToken = {
 
 axiosInstanceGlobal.interceptors.request.use(
     (config: AxiosRequestConfig) => {
-        console.log('SET access token', applicationAccessToken.token);
+        console.log('ПРОВЕРКА ПЕРЕД ЗАПРОСОМ');
+        console.log('ACCESS TOKEN', applicationAccessToken.token);
 
         if (!applicationAccessToken.token) {
+            console.log('ACCESS TOKEN — ОТСУТСТВУЕТ');
+
             const refreshToken = Cookies.get('refreshToken');
 
+            console.log('ПРОБУЕМ REFRESH TOKEN', refreshToken);
+
             if (!refreshToken) {
+                console.log('REFRESH TOKEN — ОТСУТСТВУЕТ');
+
                 return Promise.reject({response : {status: 403}});
             }
         }

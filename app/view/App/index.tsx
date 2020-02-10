@@ -38,7 +38,6 @@ const App: React.FC = () => {
             </Route>
         </RequireAuth>
 
-
         <Redirect to='/tasks' />
     </Switch>;
 };

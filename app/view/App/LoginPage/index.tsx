@@ -25,7 +25,6 @@ const LoginPage: React.FC = () => {
         dispatch(reducerSignInRequest(formData));
         event.preventDefault();
     }, [formData]);
-    console.log('dfdfs' );
 
     return authAuthToken.isAuthorized
         ? <Redirect to='/tasks' />

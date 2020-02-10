@@ -11,7 +11,6 @@ interface ILoaderProps {
 
 const Loader: React.FC<ILoaderProps> = (props: ILoaderProps) => {
     const isLoading = useSelector(props.selector);
-    console.log('Loader render', isLoading );
 
     return isLoading
         ? <div css={styles.loadingPanel}>
