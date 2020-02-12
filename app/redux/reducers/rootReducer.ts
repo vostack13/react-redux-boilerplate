@@ -1,6 +1,6 @@
 import {combineReducers} from 'redux';
 import tasks, {ITasksDataState, ITasksErrorState, ITasksIsLoadingState, ITasksState} from './tasks/reducers';
-import like, {ILikeState} from './like/reducers';
+import like, {ILikeState, TLikeError, TLikeIsLoading} from './like/reducers';
 import auth, {
     IAuthDataState,
     IAuthErrorState,
@@ -35,3 +35,5 @@ export const _tasksListIsLoading = (state: IAppState): ITasksIsLoadingState => s
 export const _tasksListError = (state: IAppState): ITasksErrorState => state.tasks.error;
 
 // ---------  like
+export const _likeIsLoading = (state: IAppState): TLikeIsLoading => state.like.isLoading;
+export const _likeError = (state: IAppState): TLikeError => state.like.error;

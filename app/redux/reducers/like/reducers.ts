@@ -1,50 +1,25 @@
 import {like} from 'app/redux/actions/like';
+import {combineReducers} from 'redux';
+import {handleAction} from 'app/redux/shared/handleAction';
+import {TReduxErrorState} from 'app/redux/shared/types/types';
 
-export type IReduxErrorState = {
-    message: string;
-};
+export type TLikeIsLoading = boolean;
+export type TLikeError = TReduxErrorState;
 
 export interface ILikeState {
-    isLoading: boolean;
-    error: IReduxErrorState;
+    isLoading: TLikeIsLoading;
+    error: TLikeError;
 }
 
-const initialState = {
-    isLoading: false,
+const isLoading = handleAction({
+    [like.request.type]: (_action: any) => _action.payload,
+}, false);
 
-    error: {
-        message: '',
-    },
-};
+const error = handleAction({
 
-export default (state: ILikeState = initialState, action: {payload?: any, type: string}): ILikeState => {
-    switch (action.type) {
-        case like.request.type:
-            return {
-                ...state,
-                isLoading: true,
-            };
-        case like.success.type:
-            return {
-                ...state,
-                isLoading: false,
-                error: initialState.error,
-            };
-        case like.failure.type:
-            return {
-                ...state,
-                isLoading: false,
+}, false);
 
-                error: {
-                    message: action.payload,
-                },
-            };
-        case like.canceled.type:
-            return {
-                ...initialState,
-            };
-
-        default: return state;
-
-    }
-};
+export default combineReducers({
+    isLoading,
+    error,
+});
