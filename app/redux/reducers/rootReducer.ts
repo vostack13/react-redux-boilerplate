@@ -1,9 +1,9 @@
 import {combineReducers} from 'redux';
 import tasks, {ITasksDataState, ITasksErrorState, ITasksIsLoadingState, ITasksState} from './tasks/reducers';
+import like, {ILikeState} from './like/reducers';
 import auth, {
     IAuthDataState,
     IAuthErrorState,
-    IAuthIsAuthorizedState,
     IAuthIsLoadingState,
     IAuthState,
     IAuthTokenState
@@ -12,11 +12,13 @@ import auth, {
 export default combineReducers({
     auth,
     tasks,
+    like,
 });
 
 export interface IAppState {
     auth: IAuthState;
     tasks: ITasksState;
+    like: ILikeState;
 }
 
 // ---------  auth
@@ -31,3 +33,5 @@ export const _authAuthToken = (state: IAppState): IAuthTokenState => state.auth.
 export const _tasksListData = (state: IAppState): ITasksDataState => state.tasks.taskList;
 export const _tasksListIsLoading = (state: IAppState): ITasksIsLoadingState => state.tasks.isLoading;
 export const _tasksListError = (state: IAppState): ITasksErrorState => state.tasks.error;
+
+// ---------  like

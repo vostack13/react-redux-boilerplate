@@ -10,9 +10,7 @@ import TasksList from 'app/view/App/TasksPage/TasksList';
 import {useDispatch} from 'react-redux';
 import {reducerAddTaskItemRequest, reducerTaskListCanceled, reducerTaskListRequest} from 'app/redux/actions/tasks';
 
-interface ITasksPageProps {}
-
-const TasksPage: React.FC<ITasksPageProps> = (props: ITasksPageProps) => {
+const TasksPage: React.FC = () => {
     const dispatch = useDispatch();
 
     const addTask = React.useCallback(() => {
