@@ -16,8 +16,8 @@ const TasksList: React.FC = () => {
             <div css={styles.emptyMessage}>Список задач пуст</div>
         </ul>;
 
-    const sendLike = React.useCallback((taskId: string) => {
-        dispatch(like.request.dispatch(taskId));
+    const sendLike = React.useCallback((taskId: number) => {
+        dispatch(like.request.dispatch({taskId}));
     }, [tasksListData]);
 
     return <ul css={styles.list}>

@@ -1,13 +1,17 @@
-type TActionApiTypes = 'REQUEST' | 'SUCCESS' | 'FAILURE' | 'CANCELED';
+type TActionApiTypes = 'REQUEST_API'
+    | 'SUCCESS_API'
+    | 'FAILURE_API'
+    | 'CANCELED_API'
+    | string
+;
 
 interface ICreatorAction {
     type: string;
-    dispatch: (payload?: any) => {payload?: any, type: string};
+    dispatch: any;
 }
 
-const createAction = (nameModule: string, nameType: string, nameApiType?: TActionApiTypes): ICreatorAction => {
-    const type = `[${nameModule}] ${nameType}${nameApiType ? '_' + nameApiType : ''}`;
-
+const createAction = (nameModule: string, nameType: TActionApiTypes): ICreatorAction => {
+    const type = `[${nameModule}] ${nameType}`;
     const dispatch = (payload?: any) => payload ? {payload, type} : {type};
 
     return {type, dispatch};
