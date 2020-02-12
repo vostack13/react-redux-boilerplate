@@ -1,5 +1,45 @@
 export * from './notifications';
 
+type TActionApiTypes = 'REQUEST' | 'SUCCESS' | 'FAILURE' | 'CANCELED';
+
+interface ICreatorActionProps {
+    name: string;
+    type: string;
+    apiType?: TActionApiTypes;
+    payload?: any;
+}
+
+interface ICreatorAction {
+    action: string;
+    dispatch: {payload?: any, type: string};
+}
+
+interface IReduxDispatchers {
+    request?: any;
+    success?: any;
+    failure?: any;
+    canceled?: any;
+    [dispatchName: string]: any;
+}
+
+const createAction = (props: ICreatorActionProps) => (payload: any): ICreatorAction => {
+    const action = `[${props.name}] ${props.type}${props.apiType ? '_' + props.apiType : ''}`;
+
+    const dispatch = {
+        payload: payload,
+        type: action,
+    };
+
+    return {action, dispatch};
+};
+
+const marks: IReduxDispatchers = {
+    request: createAction({name: 'MARKS', type: 'GET', apiType: 'REQUEST'}),
+    success: createAction({name: 'MARKS', type: 'GET', apiType: 'SUCCESS'}),
+    failure: createAction({name: 'MARKS', type: 'GET', apiType: 'FAILURE'}),
+    canceled: createAction({name: 'MARKS', type: 'GET', apiType: 'CANCELED'}),
+};
+
 // --------- notifications
 
 export const NOTIFICATION_ADD_ITEM = '[NOTIFICATIONS] ADD_ITEM';
