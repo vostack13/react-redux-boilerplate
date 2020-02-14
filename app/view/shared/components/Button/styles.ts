@@ -44,10 +44,16 @@ const variant = {
 };
 
 const color = {
+    // primary: (t: ITheme) => css`
+    //     background-color: ${t.colors.primary200};
+    //     color: ${t.colors.gray000};
+    //     border-color: ${t.colors.primary200};
+    // `,
+
     primary: (t: ITheme) => css`
-        background-color: ${t.colors.primary200};
-        color: ${t.colors.gray000};
-        border-color: ${t.colors.primary200};
+        color: ${t.colors.gray800};
+        background-color: ${t.colors.gray100};
+        box-shadow: ${t.shadow.depth100Neo};
     `,
 
     secondary: (t: ITheme) => css`

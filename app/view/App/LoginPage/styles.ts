@@ -12,9 +12,9 @@ const main = css`
 
 const section = (t: ITheme) => css`
     padding: 40px 24px;
-    background-color: ${t.colors.gray000};
     border-radius: 4px;
-    border: 1px solid ${t.colors.gray100};
+    background-color: ${t.colors.gray100};
+    box-shadow: ${t.shadow.depth100Neo};
 `;
 
 const sectionTitle = (t: ITheme) => css`

@@ -36,7 +36,6 @@ const applicationAccessToken = {
             } else {
                 resolve();
             }
-
         });
     },
 };

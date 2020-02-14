@@ -34,6 +34,8 @@ export interface IThemeShadow {
     depth200: string;
     depth300: string;
     depth400: string;
+
+    depth100Neo: string;
 }
 
 export interface IThemeUtils {

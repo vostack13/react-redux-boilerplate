@@ -18,7 +18,7 @@ const root = (t: ITheme) => css`
         text-rendering: optimizeLegibility;
         -webkit-font-smoothing: antialiased;
         overflow-x: hidden;
-        background-color: ${t.colors.gray050};
+        background-color: ${t.colors.gray100};
     }
 
     #root {

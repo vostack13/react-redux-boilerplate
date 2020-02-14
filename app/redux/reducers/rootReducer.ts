@@ -1,5 +1,5 @@
 import {combineReducers} from 'redux';
-import tasks, {ITasksDataState, ITasksErrorState, ITasksIsLoadingState, ITasksState} from './tasks/reducers';
+import tasks, {ITasksState} from './tasks/reducers';
 import like, {ILikeState, TLikeError, TLikeIsLoading} from './like/reducers';
 import auth, {
     IAuthDataState,
@@ -8,6 +8,7 @@ import auth, {
     IAuthState,
     IAuthTokenState
 } from './auth/reducers';
+import {createSelector} from 'reselect';
 
 export default combineReducers({
     auth,
@@ -30,10 +31,14 @@ export const _authAuthToken = (state: IAppState): IAuthTokenState => state.auth.
 
 // ---------  taskList
 
-export const _tasksListData = (state: IAppState): ITasksDataState => state.tasks.taskList;
-export const _tasksListIsLoading = (state: IAppState): ITasksIsLoadingState => state.tasks.isLoading;
-export const _tasksListError = (state: IAppState): ITasksErrorState => state.tasks.error;
+export const _tasksListData = (state: IAppState): ITasksState => state.tasks;
 
 // ---------  like
 export const _likeIsLoading = (state: IAppState): TLikeIsLoading => state.like.isLoading;
 export const _likeError = (state: IAppState): TLikeError => state.like.error;
+
+export const _tasksListReselect = createSelector(
+    (state: IAppState): ITasksState => state.tasks,
+
+    tasks => tasks
+);
