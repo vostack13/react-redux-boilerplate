@@ -3,20 +3,21 @@ import {jsx} from '@emotion/core';
 import styles from './styles';
 import React from 'react';
 import Button from 'app/view/shared/components/Button';
-import {reducerAddTaskItemRequest, reducerTaskListRequest} from 'app/redux/actions/tasks';
 import {useDispatch} from 'react-redux';
 import {NavLink} from 'react-router-dom';
+import actions from 'app/redux/reducers/actions';
 
 const Header: React.FC = () => {
     const dispatch = useDispatch();
 
     const addTask = React.useCallback(() => {
-        dispatch(reducerAddTaskItemRequest({
+        dispatch(actions.tasks.addTask.request.dispatch({
             title: 'Тестовая задача',
             description: 'Тестируем задачу новую',
+            is_like: false,
         }));
 
-        dispatch(reducerTaskListRequest());
+        dispatch(actions.tasks.getList.request.dispatch({}));
     }, []);
 
     return <header css={styles.header}>

@@ -1,141 +1,15 @@
-import {
-    AUTH_SIGNIN_CANCELED,
-    AUTH_SIGNIN_FAILURE,
-    AUTH_SIGNIN_REQUEST,
-    AUTH_SIGNIN_SUCCESS, AUTH_TOKEN_CANCELED,
-    AUTH_TOKEN_FAILURE,
-    AUTH_TOKEN_REQUEST, AUTH_TOKEN_SUCCESS
-} from 'app/redux/actions';
-
-export type IAuthIsLoadingState = boolean;
-export type IAuthIsAuthorizedState = boolean;
-
-export type IAuthDataState = {
-    isLoaded: boolean;
-    data: any
-};
-
-export type IAuthTokenState = {
-    isLoading: IAuthIsLoadingState;
-    isLoaded: IAuthIsLoadingState;
-    isAuthorized: IAuthIsAuthorizedState;
-};
-
-export type IAuthErrorState = {
-    message: string;
-};
+import signIn, {IAuthSignInState} from './signIn';
+import refreshToken, {IAuthRefreshTokenState} from './refreshToken';
+import {combineReducers} from 'redux';
 
 export interface IAuthState {
-    isLoading: IAuthIsLoadingState;
-    signin: IAuthDataState;
-    error: IAuthErrorState;
-    authToken: IAuthTokenState;
+    signIn: IAuthSignInState;
+    refreshToken: IAuthRefreshTokenState;
 }
 
-const initialState = {
-    isLoading: false,
+const auth = combineReducers({
+    signIn: signIn.reducers,
+    refreshToken: refreshToken.reducers,
+});
 
-    authToken: {
-        isLoaded: false,
-        isLoading: false,
-        isAuthorized: false,
-
-    },
-
-    signin: {
-        isLoaded: false,
-        data: {},
-    },
-
-    error: {
-        message: '',
-    },
-};
-
-export default (state: IAuthState = initialState, action: {payload?: any, type: string}): IAuthState => {
-    switch (action.type) {
-        case AUTH_SIGNIN_REQUEST: return {
-            ...state,
-            isLoading: true,
-        };
-
-        case AUTH_SIGNIN_SUCCESS: return {
-            ...state,
-            isLoading: false,
-
-            authToken: {
-                isLoaded: true,
-                isLoading: false,
-                isAuthorized: true,
-            },
-
-            signin: {
-                isLoaded: true,
-                data: action.payload,
-            },
-            error: initialState.error,
-        };
-
-        case AUTH_SIGNIN_FAILURE: return {
-            ...state,
-            isLoading: false,
-
-            authToken: {
-                isLoaded: true,
-                isLoading: false,
-                isAuthorized: false,
-            },
-
-            error: {
-                message: action.payload,
-            },
-        };
-
-        case AUTH_SIGNIN_CANCELED: return {
-            ...state,
-            isLoading: false,
-        };
-
-        case AUTH_TOKEN_REQUEST: return {
-            ...state,
-
-            authToken: {
-                ...state.authToken,
-                isLoaded: false,
-                isLoading: true,
-            },
-        };
-
-        case AUTH_TOKEN_SUCCESS: return {
-            ...state,
-
-            authToken: {
-                isLoaded: true,
-                isLoading: false,
-                isAuthorized: true,
-            },
-        };
-
-        case AUTH_TOKEN_FAILURE: return {
-            ...state,
-            authToken: {
-                isLoaded: true,
-                isLoading: false,
-                isAuthorized: false,
-            },
-        };
-
-        case AUTH_TOKEN_CANCELED: return {
-            ...state,
-
-            authToken: {
-                ...state.authToken,
-                isLoading: false,
-                isLoaded: false,
-            },
-        };
-
-        default: return state;
-
-    }
-};
+export default auth;

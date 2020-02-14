@@ -3,39 +3,36 @@ import {jsx} from '@emotion/core';
 import styles from './styles';
 import React from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {reducerTaskListCanceled, reducerTaskListRequest} from 'app/redux/actions/tasks';
-import {_tasksListReselect} from 'app/redux/reducers/rootReducer';
-import {like} from 'app/redux/actions/like';
+import {_tasksListData} from 'app/redux/reducers/rootReducer';
 import Loader from 'app/view/shared/components/Loader';
 import ErrorMessage from 'app/view/shared/components/ErrorMessage';
 import Button from 'app/view/shared/components/Button';
+import actions from 'app/redux/reducers/actions';
 
 const TasksPage: React.FC = () => {
     const dispatch = useDispatch();
-    const tasksListData = useSelector(_tasksListReselect);
-
-    console.log('render TasksPage —— ', tasksListData.isLoading, ' | ', tasksListData.data);
+    const tasksListData = useSelector(_tasksListData);
 
     const sendLike = React.useCallback((taskId: number) => {
-        dispatch(like.request.dispatch({taskId}));
+        dispatch(actions.tasks.sendLike.request.dispatch({taskId}));
     }, [tasksListData]);
 
     const getData = React.useCallback(() => {
-        dispatch(reducerTaskListRequest());
+        dispatch(actions.tasks.getList.request.dispatch());
     }, [tasksListData]);
 
     React.useEffect(() => {
         getData();
 
         return () => {
-            dispatch(reducerTaskListCanceled());
+            dispatch(actions.tasks.getList.canceled.dispatch());
         };
     }, []);
 
     if (tasksListData.isLoading)
         return <Loader />;
 
-    if (tasksListData.error)
+    if (tasksListData.error.message)
         return <ErrorMessage message={tasksListData.error.message} />;
 
     if (tasksListData.data === undefined)
@@ -53,7 +50,12 @@ const TasksPage: React.FC = () => {
             <div css={styles.itemDate}>{task.createdBy}</div>
 
             <div css={styles.itemActions}>
-                <Button onClick={() => sendLike(task.id)} variant='fill' color='primary'>
+                <Button
+                    onClick={() => sendLike(task.id)}
+                    variant='fill'
+                    color='primary'
+                    css={styles.likeButton({isLike: task.is_like})}
+                >
                     <div>❤️</div>
                 </Button>
 

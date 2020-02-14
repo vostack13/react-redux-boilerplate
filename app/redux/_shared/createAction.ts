@@ -10,8 +10,8 @@ interface ICreatorAction {
     dispatch: any;
 }
 
-const createAction = (nameModule: string, nameType: TActionApiTypes): ICreatorAction => {
-    const type = `[${nameModule}] ${nameType}`;
+const createAction = (actionName: string, actionType: TActionApiTypes): ICreatorAction => {
+    const type = `[${actionName}] ${actionType}`;
     const dispatch = (payload?: any) => payload ? {payload, type} : {type};
 
     return {type, dispatch};

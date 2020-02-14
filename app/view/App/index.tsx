@@ -6,25 +6,23 @@ import TasksPage from 'app/view/App/TasksPage';
 import {Switch, Route, Redirect} from 'react-router-dom';
 import LoginPage from 'app/view/App/LoginPage';
 import {useDispatch, useSelector} from 'react-redux';
-import {reducerAuthTokenRequest} from 'app/redux/actions/auth';
 import {_authAuthToken} from 'app/redux/reducers/rootReducer';
 import Spinner from 'app/view/shared/components/Spinner';
 import Header from 'app/view/App/Header';
 import MessagesPage from 'app/view/App/MessagesPage';
+import actions from 'app/redux/reducers/actions';
 
 const RequireAuth: React.FC<any> = (props: any) => {
     const authAuthToken = useSelector(_authAuthToken);
 
-    console.log('render RequireAuth');
+    if (authAuthToken.isAuthorized)
+        return props.children;
 
-    if (authAuthToken.isLoading)
-        return <Spinner />;
-
-    if (!authAuthToken.isAuthorized && !authAuthToken.isLoading) {
+    if (!authAuthToken.isAuthorized && authAuthToken.isLoaded) {
         return <Redirect to='/signin' />;
     }
 
-    return props.children;
+    return <Spinner />;
 };
 
 const Main = () => {
@@ -49,7 +47,7 @@ const App: React.FC = () => {
     const dispatch = useDispatch();
 
     React.useEffect(() => {
-        dispatch(reducerAuthTokenRequest());
+        dispatch(actions.auth.refreshToken.request.dispatch());
     }, []);
 
     return <Switch>

@@ -4,11 +4,11 @@ export type TAction<T> = {
 };
 
 export interface IReduxAction {
-    [actionName: string]: TAction<any>;
     request?: any;
     success?: any;
     failure?: any;
     canceled?: any;
+    [actionName: string]: any;
 }
 
 export type TReduxErrorState = {

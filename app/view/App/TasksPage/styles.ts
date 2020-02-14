@@ -10,13 +10,11 @@ const list = css`
     padding-right: 16px;
 `;
 
-const item = (t: ITheme) => css`
+const item = css`
     min-height: 80px;
     width: 100%;
     padding: 16px 12px;
     border-radius: 4px;
-    box-shadow: ${t.shadow.depth100Neo};
-    background-color: ${t.colors.gray100};
     display: grid;
     grid-row-gap: 8px;
 `;
@@ -42,12 +40,16 @@ const itemDesc = (t: ITheme) => css`
     color: ${t.colors.gray700};
 `;
 
-const itemActions = (t: ITheme) => css`
+const itemActions = css`
     display: flex;
 
     & > *:nth-of-type(n+2) {
         margin-left: 8px;
     }
+`;
+
+const likeButton = (props: {isLike: boolean}) => (t: ITheme) => css`
+    background-color: ${props.isLike && t.colors.primary200};
 `;
 
 export default {
@@ -58,4 +60,5 @@ export default {
     itemDate,
     itemActions,
     emptyMessage,
+    likeButton,
 };

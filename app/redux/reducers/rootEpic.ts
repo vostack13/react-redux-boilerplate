@@ -1,10 +1,12 @@
 import {combineEpics} from 'redux-observable';
-import {epicAddTaskItem, epicTasksList} from 'app/redux/reducers/tasks/epics';
-import {epicAuthToken, epicSignIn} from 'app/redux/reducers/auth/epics';
+import {epicTasksGetList} from 'app/redux/reducers/tasks/getList/epics';
+import {epicTasksAddTask} from 'app/redux/reducers/tasks/addTask/epics';
+import {epicAuthSignIn} from 'app/redux/reducers/auth/signIn/epics';
+import {epicAuthRefreshToken} from 'app/redux/reducers/auth/refreshToken/epics';
 
 export default combineEpics(
-    epicAuthToken,
-    epicSignIn,
-    epicTasksList,
-    epicAddTaskItem
+    epicAuthRefreshToken,
+    epicAuthSignIn,
+    epicTasksGetList,
+    epicTasksAddTask
 );

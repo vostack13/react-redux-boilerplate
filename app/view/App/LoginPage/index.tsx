@@ -4,10 +4,10 @@ import styles from './styles';
 import React from 'react';
 import Button from 'app/view/shared/components/Button';
 import {useDispatch, useSelector} from 'react-redux';
-import {reducerSignInRequest} from 'app/redux/actions/auth';
 import {_authAuthToken} from 'app/redux/reducers/rootReducer';
 import {Redirect} from 'react-router-dom';
 import Spinner from 'app/view/shared/components/Spinner';
+import actions from 'app/redux/reducers/actions';
 
 const LoginPage: React.FC = () => {
     const dispatch = useDispatch();
@@ -24,7 +24,7 @@ const LoginPage: React.FC = () => {
 
     const submitForm = React.useCallback((event: React.FormEvent) => {
         event.preventDefault();
-        dispatch(reducerSignInRequest(formData));
+        dispatch(actions.auth.signIn.request.dispatch(formData));
     }, [formData]);
 
     if (authAuthToken.isAuthorized)
