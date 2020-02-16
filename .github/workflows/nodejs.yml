@@ -22,21 +22,15 @@ jobs:
           CI: true
           VPS_SECRET_ACCESS: ${{ secrets.SecretKey }}
 
-      - shell: bash
-        run: |
-          'which ssh-agent || ( apk add openssh )'
-          eval $(ssh-agent -s)
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SecretKey }}" | tr -d '\r' | ssh-add - > /dev/null
-          echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
-          ssh web@stanislav-vozikov.com
-          touch ~/pushka.txt
-
-#          secr=`cat ./secret`
-#          echo $secr
-
-#          value=`cat folderwork/index.html`
-#          echo $value
+      - name: executing remote ssh commands using ssh key
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SecretKey }}
+#          port: ${{ secrets.PORT }}
+          script: |
+            touch ~/pushka.txt
 
 #      - name: Upload dist/
 #        uses: actions/upload-artifact@v1
