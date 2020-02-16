@@ -40,5 +40,5 @@ jobs:
 
       - shell: bash
         run: |
-          cat > folderwork/dist/index.html
-
+          value=`cat > folderwork/dist/index.html`
+          echo $value
