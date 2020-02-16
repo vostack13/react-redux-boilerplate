@@ -47,7 +47,6 @@ jobs:
           SOURCE: "folderwork/"
           REMOTE_HOST: ${{ secrets.HOST }}
           REMOTE_USER: ${{ secrets.USERNAME }}
-          TARGET: ${{ secrets.REMOTE_TARGET }}
 
 #      - name: Executing remote ssh commands using ssh key
 #        uses: appleboy/ssh-action@master
