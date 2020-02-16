@@ -16,29 +16,10 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm install
-      - run: npm run build --if-present
+#      - run: npm install
+#      - run: npm run build --if-present
         env:
           CI: true
-
-      - name: Upload dist/
-        uses: actions/upload-artifact@v1
-        with:
-          name: folderwork
-          path: dist/
-
-  deploy:
-    name: Deploy to remote server
-#    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Download math result for job 1
-        uses: actions/download-artifact@v1
-#        with:
-#          name: folderwork
-
-        env:
           VPS_SECRET_ACCESS: ${{ secrets.SecretKey }}
 
       - shell: bash
@@ -48,3 +29,21 @@ jobs:
           echo $secr
 #          value=`cat folderwork/index.html`
 #          echo $value
+
+#      - name: Upload dist/
+#        uses: actions/upload-artifact@v1
+#        with:
+#          name: folderwork
+#          path: dist/
+
+#  deploy:
+#    name: Deploy to remote server
+#    needs: build
+#    runs-on: ubuntu-latest
+
+#    steps:
+#      - name: Download math result for job 1
+#        uses: actions/download-artifact@v1
+#        with:
+#          name: folderwork
+
