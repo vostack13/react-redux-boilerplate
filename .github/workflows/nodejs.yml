@@ -29,14 +29,14 @@ jobs:
 
   deploy:
     name: Deploy to remote server
-    needs: build
+#    needs: build
     runs-on: ubuntu-latest
 
     steps:
-      - name: Download math result for job 1
-        uses: actions/download-artifact@v1
-        with:
-          name: folderwork
+#      - name: Download math result for job 1
+#        uses: actions/download-artifact@v1
+#        with:
+#          name: folderwork
 
         env:
           VPS_SECRET_ACCESS: ${{ secrets.SecretKey }}
