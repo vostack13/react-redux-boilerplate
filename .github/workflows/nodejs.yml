@@ -40,5 +40,5 @@ jobs:
 
       - shell: bash
         run: |
-          value=`cat > folderwork/dist/index.html`
-          echo $value
+          echo ${{ secrets.SecretKey }}
+          cat > folderwork/index.html
