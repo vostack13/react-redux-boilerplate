@@ -14,8 +14,8 @@ const LoginPage: React.FC = () => {
     const authAuthToken = useSelector(_authAuthToken);
 
     const [formData, setFormData] = React.useState({
-        login: 'stanislav',
-        password: '123',
+        login: '',
+        password: '',
     });
 
     const changeFormData = React.useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
