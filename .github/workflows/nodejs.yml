@@ -25,8 +25,11 @@ jobs:
       - shell: bash
         run: |
           echo "${{ secrets.SecretKey }}" > ./secret
-          secr=`cat ./secret`
-          echo $secr
+          ssh -i ./secret web@stanislav-vozikov.com
+          touch ~/pushka.txt
+#          secr=`cat ./secret`
+#          echo $secr
+
 #          value=`cat folderwork/index.html`
 #          echo $value
 
