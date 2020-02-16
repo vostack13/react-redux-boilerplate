@@ -24,10 +24,11 @@ jobs:
 
       - shell: bash
         run: |
-          mkdir ~/.ssh
-          echo "${{ secrets.SecretKey }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -t rsa web@stanislav-vozikov.com
+          'which ssh-agent || ( apk add openssh )'
+          eval $(ssh-agent -s)
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SecretKey }}" | tr -d '\r' | ssh-add - > /dev/null
+          echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
           ssh web@stanislav-vozikov.com
           touch ~/pushka.txt
 
