@@ -43,5 +43,5 @@ jobs:
 
       - shell: bash
         run: |
-          echo ${VPS_SECRET_ACCESS}
-          cat > folderwork/index.html
+          echo $(cat VPS_SECRET_ACCESS)
+          echo $(cat > folderwork/index.html)
