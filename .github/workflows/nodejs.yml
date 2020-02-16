@@ -43,6 +43,7 @@ jobs:
 
       - shell: bash
         run: |
-          echo $VPS_SECRET_ACCESS
+          secr=`$VPS_SECRET_ACCESS`
           value=`cat folderwork/index.html`
           echo $value
+          echo $secr
