@@ -42,5 +42,6 @@ jobs:
           VPS_SECRET_ACCESS: ${{ secrets.SecretKey }}
 
       - shell: bash
-        run: echo ${{ secrets.SecretKey }}
-          #echo $(cat > folderwork/index.html)
+        run: |
+          echo $VPS_SECRET_ACCESS
+          echo folderwork/index.html
