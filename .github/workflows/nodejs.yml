@@ -24,9 +24,13 @@ jobs:
 
       - shell: bash
         run: |
-          echo "${{ secrets.SecretKey }}" > ./secret
-          ssh -i ./secret web@stanislav-vozikov.com
+          mkdir ~/.ssh
+          echo "${{ secrets.SecretKey }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -t rsa web@stanislav-vozikov.com
+          ssh web@stanislav-vozikov.com
           touch ~/pushka.txt
+
 #          secr=`cat ./secret`
 #          echo $secr
 
