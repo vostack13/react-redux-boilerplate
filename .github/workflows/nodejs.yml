@@ -16,36 +16,44 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-#      - run: npm install
-#      - run: npm run build --if-present
+      - run: npm install
+      - run: npm run build --if-present
         env:
           CI: true
-          VPS_SECRET_ACCESS: ${{ secrets.SecretKey }}
 
-      - name: executing remote ssh commands using ssh key
-        uses: appleboy/ssh-action@master
+
+      - name: Upload dist/
+        uses: actions/upload-artifact@v1
         with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          key: ${{ secrets.SecretKey }}
-#          port: ${{ secrets.PORT }}
-          script: |
-            touch ~/pushka.txt
+          name: folderwork
+          path: dist/
 
-#      - name: Upload dist/
-#        uses: actions/upload-artifact@v1
+  deploy:
+    name: Deploy to remote server
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download math result for job 1
+        uses: actions/download-artifact@v1
+        with:
+          name: folderwork
+
+      - name: Deploy to Server
+        uses: easingthemes/ssh-deploy@v2.0.7
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SecretKey }}
+          ARGS: "-rltgoDzvO --delete"
+          SOURCE: "folderwork/"
+          REMOTE_HOST: ${{ secrets.HOST }}
+          REMOTE_USER: ${{ secrets.USERNAME }}
+          TARGET: ${{ secrets.REMOTE_TARGET }}
+
+#      - name: Executing remote ssh commands using ssh key
+#        uses: appleboy/ssh-action@master
 #        with:
-#          name: folderwork
-#          path: dist/
-
-#  deploy:
-#    name: Deploy to remote server
-#    needs: build
-#    runs-on: ubuntu-latest
-
-#    steps:
-#      - name: Download math result for job 1
-#        uses: actions/download-artifact@v1
-#        with:
-#          name: folderwork
+#          host: ${{ secrets.HOST }}
+#          username: ${{ secrets.USERNAME }}
+#          key: ${{ secrets.SecretKey }}
+#          script: |
 
