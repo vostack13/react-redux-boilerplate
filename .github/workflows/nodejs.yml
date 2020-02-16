@@ -45,6 +45,8 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SecretKey }}
           script: |
+            cd ~/react-redux-boilerplate
             git pull
+            npm i
             npm run build
 
