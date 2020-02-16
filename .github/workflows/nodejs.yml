@@ -38,7 +38,10 @@ jobs:
         with:
           name: folderwork
 
+        env:
+          VPS_SECRET_ACCESS: ${{ secrets.SecretKey }}
+
       - shell: bash
         run: |
-          echo ${{ secrets.SecretKey }}
+          echo ${VPS_SECRET_ACCESS}
           cat > folderwork/index.html
