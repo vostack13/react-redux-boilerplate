@@ -1,6 +1,9 @@
 import React from 'react';
 
 type TValidatorOption = 'required' | 'notEmpty' | 'email' | string;
+interface IInitial {
+    [key: string]: {value: any, validators: Array<TValidatorOption>};
+}
 
 interface IValid {
     [idx: string]: (value: string) => string;
@@ -32,8 +35,13 @@ const validator = (data: string, ...options: Array<TValidatorOption>) => {
     // .length === 0
 };
 
-export function useFormState<T>(initial: T) {
-    const [formControls, setFormControls] = React.useState(initial);
+export function useFormState(initial: IInitial) {
+    const [formControls, setFormControls] = React.useState(
+        Object.entries(initial).reduce((acc: any, [key, value]) => ({
+            ...acc,
+            [key]: value.value,
+        }), {})
+    );
 
     const [formErrors, setFormErrors] = React.useState(
         Object.keys(initial).reduce((acc: any, key) => ({...acc, [key]: ''}), {})
@@ -49,13 +57,13 @@ export function useFormState<T>(initial: T) {
     const [isValid, setIsValid] = React.useState(false);
 
     const changeValue = (event: React.ChangeEvent<HTMLInputElement>) => {
+        console.log('change: ', event.target.name, ' | ', event.target.value);
+
         setFormControls({
             ...formControls,
             [event.target.name]: event.target.value,
         });
     };
-
-    console.log('formErrors', formErrors);
 
     const onBlur = (event: any) => {
         console.log('blur: ', event.target.name, ' | ', event.target.value);
@@ -63,12 +71,21 @@ export function useFormState<T>(initial: T) {
 
         setFormErrors({
             ...formErrors,
-            [event.target.name]: validator(event.target.value, 'email', 'required'),
+            [event.target.name]: validator(
+                event.target.value,
+                ...initial[event.target.name].validators
+            ),
         });
     };
 
     React.useEffect(() => {
-        // Object.entries(initial).some(([key, value]) => ();
+        setIsValid(
+            !Object.entries(initial).some(
+                ([key, value]) => !!validator(
+                    formControls[key], ...value.validators
+                )
+            )
+        );
     }, [formErrors]);
 
     return {
@@ -76,6 +93,7 @@ export function useFormState<T>(initial: T) {
         formErrors,
         changeValue,
         onBlur,
+        isValid,
 
         // formIsValid,
         // formState,

@@ -15,8 +15,8 @@ const LoginPage: React.FC = () => {
     const dispatch = useDispatch();
     const authAuthToken = useSelector(_authAuthToken);
 
-    const {formControls, formErrors, changeValue, onBlur} = useFormState({
-        login: {value: '', validators: ['email', 'required']},
+    const {formControls, formErrors, changeValue, onBlur, isValid} = useFormState({
+        login: {value: 'stas@mail.com', validators: ['email', 'required']},
         password: {value: '', validators: ['required']},
     });
 
@@ -31,8 +31,9 @@ const LoginPage: React.FC = () => {
 
     const submitForm = React.useCallback((event: React.FormEvent) => {
         event.preventDefault();
-        dispatch(actions.auth.signIn.request.dispatch(formData));
-    }, [formData]);
+        console.log('submit', formControls);
+        dispatch(actions.auth.signIn.request.dispatch(formControls));
+    }, [formData, formControls]);
 
     if (authAuthToken.isAuthorized)
         return <Redirect to='/tasks' />;
@@ -46,10 +47,13 @@ const LoginPage: React.FC = () => {
 
                 <form css={styles.sectionForm} onSubmit={submitForm}>
                     <TextField
+                        inputProps={{
+                            tabIndex: 1,
+                        }}
                         required
                         label='Логин'
                         name='login'
-                        value={formControls.login.value}
+                        value={formControls.login}
                         onChange={changeValue}
                         error={!!formErrors.login}
                         helperText={formErrors.login}
@@ -57,21 +61,38 @@ const LoginPage: React.FC = () => {
                         variant='outlined'
                     />
 
-                    <label>
-                        <input
-                            type='password'
-                            name='password'
-                            placeholder={'Введи пароль'}
-                            value={formData.password}
-                            onChange={changeFormData}
-                        />
-                    </label>
+                    <TextField
+                        inputProps={{
+                            tabIndex: 1,
+                        }}
+                        required
+                        label='Пароль'
+                        name='password'
+                        type='password'
+                        value={formControls.password}
+                        onChange={changeValue}
+                        error={!!formErrors.password}
+                        helperText={formErrors.password}
+                        onBlur={onBlur}
+                        variant='outlined'
+                    />
+
+                    {/*<label>*/}
+                    {/*    <input*/}
+                    {/*        type='password'*/}
+                    {/*        name='password'*/}
+                    {/*        placeholder={'Введи пароль'}*/}
+                    {/*        value={formData.password}*/}
+                    {/*        onChange={changeFormData}*/}
+                    {/*    />*/}
+                    {/*</label>*/}
 
                     <Button
+                        tabIndex={1}
                         type='submit'
                         color='primary'
                         variant='contained'
-                        disabled={true}
+                        disabled={!isValid}
                     >Войти</Button>
 
                     {/*<Button type='submit' color='primary' variant='fill'>Войти</Button>*/}
