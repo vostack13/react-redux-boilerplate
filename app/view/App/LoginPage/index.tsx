@@ -2,16 +2,23 @@
 import {jsx} from '@emotion/core';
 import styles from './styles';
 import React from 'react';
-import Button from 'app/view/shared/components/Button';
+// import Button from 'app/view/shared/components/Button';
 import {useDispatch, useSelector} from 'react-redux';
 import {_authAuthToken} from 'app/redux/reducers/rootReducer';
 import {Redirect} from 'react-router-dom';
 import Spinner from 'app/view/shared/components/Spinner';
 import actions from 'app/redux/reducers/actions';
+import {useFormState} from 'app/view/App/LoginPage/useForm';
+import {Button, TextField} from '@material-ui/core';
 
 const LoginPage: React.FC = () => {
     const dispatch = useDispatch();
     const authAuthToken = useSelector(_authAuthToken);
+
+    const {formControls, formErrors, changeValue, onBlur} = useFormState({
+        login: {value: '', validators: ['email', 'required']},
+        password: {value: '', validators: ['required']},
+    });
 
     const [formData, setFormData] = React.useState({
         login: '',
@@ -38,14 +45,17 @@ const LoginPage: React.FC = () => {
                 <h1 css={styles.sectionTitle}>Добро пожаловать!</h1>
 
                 <form css={styles.sectionForm} onSubmit={submitForm}>
-                    <label>
-                        <input
-                            name='login'
-                            placeholder={'Введите логин'}
-                            value={formData.login}
-                            onChange={changeFormData}
-                        />
-                    </label>
+                    <TextField
+                        required
+                        label='Логин'
+                        name='login'
+                        value={formControls.login.value}
+                        onChange={changeValue}
+                        error={!!formErrors.login}
+                        helperText={formErrors.login}
+                        onBlur={onBlur}
+                        variant='outlined'
+                    />
 
                     <label>
                         <input
@@ -57,7 +67,14 @@ const LoginPage: React.FC = () => {
                         />
                     </label>
 
-                    <Button type='submit' color='primary' variant='fill'>Войти</Button>
+                    <Button
+                        type='submit'
+                        color='primary'
+                        variant='contained'
+                        disabled={true}
+                    >Войти</Button>
+
+                    {/*<Button type='submit' color='primary' variant='fill'>Войти</Button>*/}
                 </form>
             </section>}
         </main >;
