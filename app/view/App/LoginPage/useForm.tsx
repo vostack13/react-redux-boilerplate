@@ -9,7 +9,7 @@ interface IValid {
     [idx: string]: (value: string) => string;
 }
 
-const validator = (data: string, ...options: Array<TValidatorOption>) => {
+const validator = (data: string, skipOptions: Array<TValidatorOption>, ...options: Array<TValidatorOption>) => {
     const errorTypes: IValid = {
         required: (value: string) => (!!value ? '' : 'Поле не должно быть пустым'),
 
@@ -28,11 +28,11 @@ const validator = (data: string, ...options: Array<TValidatorOption>) => {
 
     return options.reduce(
         (acc: Array<string>, key: TValidatorOption) =>
-            !!errorTypes[key](data) ? [...acc, errorTypes[key](data)] : [...acc],
+            !skipOptions.includes(key) && !!errorTypes[key](data)
+                ? [...acc, errorTypes[key](data)]
+                : [...acc],
         []
     )[0] || '';
-
-    // .length === 0
 };
 
 export function useFormState(initial: IInitial) {
@@ -47,55 +47,51 @@ export function useFormState(initial: IInitial) {
         Object.keys(initial).reduce((acc: any, key) => ({...acc, [key]: ''}), {})
     );
 
-    // const [formState, setFormState] = React.useState(
-    //     Object.entries(formControls).reduce((acc: any, [key, value]) => ({
-    //         ...acc,
-    //         [key]: {value, errorText: formErrors[key] ? formErrors[key] : ''},
-    //     }), {})
-    // );
+    const [isChangeForm, setIsChangeForm] = React.useState(false);
 
-    const [isValid, setIsValid] = React.useState(false);
+    const setRef = React.useCallback((ref: any) => {
+        ref.addEventListener('blur', function(event: any) {
+            changeError(event.target.name, event.target.value, ['required']);
+        }, true);
+    }, []);
 
     const changeValue = (event: React.ChangeEvent<HTMLInputElement>) => {
-        console.log('change: ', event.target.name, ' | ', event.target.value);
-
         setFormControls({
             ...formControls,
             [event.target.name]: event.target.value,
         });
     };
 
-    const onBlur = (event: any) => {
-        console.log('blur: ', event.target.name, ' | ', event.target.value);
-        console.log('validator: ', validator(event.target.value, 'email', 'required'));
+    const changeError = (name: string, value: string, skipValidOptions: Array<TValidatorOption>) => {
+        const validationValue = validator(
+            value,
+            skipValidOptions,
+            ...initial[name].validators
+        );
 
-        setFormErrors({
-            ...formErrors,
-            [event.target.name]: validator(
-                event.target.value,
-                ...initial[event.target.name].validators
-            ),
-        });
+        setFormErrors((prev: any) => ({
+            ...prev,
+            [name]: validationValue,
+        }));
     };
 
-    React.useEffect(() => {
-        setIsValid(
-            !Object.entries(initial).some(
-                ([key, value]) => !!validator(
-                    formControls[key], ...value.validators
-                )
-            )
-        );
-    }, [formErrors]);
+    const validationForm = () => {
+        const errors = Object.entries(initial).reduce((acc: any, [key, value]) => ({
+            ...acc,
+            [key]: validator(formControls[key], [], ...value.validators),
+        }), {});
+
+        setFormErrors(errors);
+
+        return !Object.values(errors).some(value => !!value);
+    };
 
     return {
         formControls,
         formErrors,
         changeValue,
-        onBlur,
-        isValid,
-
-        // formIsValid,
-        // formState,
+        validationForm,
+        setRef,
+        isChangeForm,
     };
 }

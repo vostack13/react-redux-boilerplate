@@ -15,8 +15,8 @@ const LoginPage: React.FC = () => {
     const dispatch = useDispatch();
     const authAuthToken = useSelector(_authAuthToken);
 
-    const {formControls, formErrors, changeValue, onBlur, isValid} = useFormState({
-        login: {value: 'stas@mail.com', validators: ['email', 'required']},
+    const {formControls, formErrors, changeValue, validationForm, setRef, isChangeForm} = useFormState({
+        login: {value: '', validators: ['email', 'required']},
         password: {value: '', validators: ['required']},
     });
 
@@ -31,8 +31,10 @@ const LoginPage: React.FC = () => {
 
     const submitForm = React.useCallback((event: React.FormEvent) => {
         event.preventDefault();
-        console.log('submit', formControls);
-        dispatch(actions.auth.signIn.request.dispatch(formControls));
+
+        if (validationForm()) {
+            dispatch(actions.auth.signIn.request.dispatch(formControls));
+        }
     }, [formData, formControls]);
 
     if (authAuthToken.isAuthorized)
@@ -49,23 +51,24 @@ const LoginPage: React.FC = () => {
                     <TextField
                         inputProps={{
                             tabIndex: 1,
+                            ref: setRef,
                         }}
-                        required
+                        // required
                         label='Логин'
                         name='login'
                         value={formControls.login}
                         onChange={changeValue}
                         error={!!formErrors.login}
                         helperText={formErrors.login}
-                        onBlur={onBlur}
                         variant='outlined'
                     />
 
                     <TextField
                         inputProps={{
                             tabIndex: 1,
+                            ref: setRef,
                         }}
-                        required
+                        // required
                         label='Пароль'
                         name='password'
                         type='password'
@@ -73,7 +76,6 @@ const LoginPage: React.FC = () => {
                         onChange={changeValue}
                         error={!!formErrors.password}
                         helperText={formErrors.password}
-                        onBlur={onBlur}
                         variant='outlined'
                     />
 
@@ -92,7 +94,7 @@ const LoginPage: React.FC = () => {
                         type='submit'
                         color='primary'
                         variant='contained'
-                        disabled={!isValid}
+                        disabled={!isChangeForm}
                     >Войти</Button>
 
                     {/*<Button type='submit' color='primary' variant='fill'>Войти</Button>*/}
